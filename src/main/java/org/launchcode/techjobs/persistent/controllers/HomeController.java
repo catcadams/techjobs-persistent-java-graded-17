@@ -62,11 +62,18 @@ public class HomeController {
             return "add";
         } else {
             Optional<Employer> result = employerRepository.findById(employerId);
-            List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
-            Employer employer = result.get();
-            newJob.setEmployer(employer);
-            newJob.setSkills(skillObjs);
-            jobRepository.save(newJob);
+            if(result.isEmpty()) {
+                List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+                newJob.setEmployer(new Employer());
+                newJob.setSkills(skillObjs);
+                jobRepository.save(newJob);
+            } else {
+                List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+                Employer employer = result.get();
+                newJob.setEmployer(employer);
+                newJob.setSkills(skillObjs);
+                jobRepository.save(newJob);
+            }
         }
         return "redirect:";
     }
